@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeupApi", "MakeupApi\MakeupApi.csproj", "{171A11A4-2D25-4598-89B1-101474C9A240}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeupApi.Tests", "MakeupApi.Tests\MakeupApi.Tests.csproj", "{CCD5C57F-D751-4798-836E-0472DF31ECE8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{171A11A4-2D25-4598-89B1-101474C9A240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{171A11A4-2D25-4598-89B1-101474C9A240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{171A11A4-2D25-4598-89B1-101474C9A240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{171A11A4-2D25-4598-89B1-101474C9A240}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCD5C57F-D751-4798-836E-0472DF31ECE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCD5C57F-D751-4798-836E-0472DF31ECE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCD5C57F-D751-4798-836E-0472DF31ECE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCD5C57F-D751-4798-836E-0472DF31ECE8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {15A21404-BDE3-4FE2-9CCF-7965171E1CB8}
+	EndGlobalSection
+EndGlobal
