@@ -17,17 +17,6 @@ namespace MakeupApi.Models
         private string password;
         private bool isChangedLogin;
 
-        public List<User> initialUser()
-        {
-            var user = new List<User>
-            {
-                new User(1, "Guilherme", "Colifeu", "gui_colifeu", "loginGui", "senhaGui"),
-                new User(2, "Gabriel", "Ramos", "gabriel_ramos", "loginGabriel", "senhaGabriel"),
-                new User(3, "Isabela", "Santos", "isabela_santos", "loginIsa", "senhaIsa")
-            };
-
-            return user;
-        }
 
         // Contrutor Vazio
         public User() { }
@@ -40,9 +29,8 @@ namespace MakeupApi.Models
         }
 
         // Contrutor para o Cadastro
-        public User(int id, string name, string last_name, string nickname, string login, string password)
-        {
-            this.Id = id;
+        public User(string name, string last_name, string nickname, string login, string password)
+        { 
             this.Name = name;
             this.Last_name = last_name;
             this.Nickname = nickname;
@@ -57,19 +45,6 @@ namespace MakeupApi.Models
         public string Login { get => login; set => login = value; }
         public string Password { get => password; set => password = value; }
         public bool IsChangedLogin { get => isChangedLogin; set => isChangedLogin = value; }
-
-        public bool avalaibleUser()
-        {
-            if (id == 0 || name == null || name == "" || last_name == null || last_name == "" || nickname == null
-                || nickname == "" || login == null || login == "" || password == null || password == "")
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
 
     }
 }
