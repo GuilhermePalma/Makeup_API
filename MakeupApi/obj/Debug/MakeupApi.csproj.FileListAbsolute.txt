@@ -93,3 +93,11 @@ C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET 
 C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\obj\Debug\MakeupApi.csproj.CopyComplete
 C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\obj\Debug\MakeupApi.dll
 C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\obj\Debug\MakeupApi.pdb
+C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\bin\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\bin\Microsoft.IdentityModel.Logging.dll
+C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\bin\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\bin\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\bin\Microsoft.IdentityModel.JsonWebTokens.xml
+C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\bin\Microsoft.IdentityModel.Logging.xml
+C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\bin\Microsoft.IdentityModel.Tokens.xml
+C:\Users\Guilherme\OneDrive - Etec Centro Paula Souza\Programação\5 - ASP.NET (C#)\MakeupApi\MakeupApi\bin\System.IdentityModel.Tokens.Jwt.xml

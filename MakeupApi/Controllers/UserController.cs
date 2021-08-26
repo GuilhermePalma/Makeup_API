@@ -25,6 +25,15 @@ namespace MakeupApi.Controllers
             new User("Isabela", "Santos", "isabela_santos", "loginIsa", "senhaIsa")
         });
 
+        [HttpGet]
+        [ActionName("JsonWebToken")]
+        public HttpResponseMessage Teste(string name, int id)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, 
+                new JsonWebToken().generateToken(name,id));
+
+        }
+
         // GET: api/User/users ---> Lista todos os Usuarios
         [ActionName("list_user")]
         [Route("~/api/user")]
