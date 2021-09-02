@@ -7,22 +7,23 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
 
-namespace MakeupApi.Models
+namespace MakeupApi.Models.Token
 {
-    public class JsonWebKeyApp
+    public class KeyJWT
     {
         // Local do arquivo com a Chave Gerada e Salva
-        ///private static readonly string myJWKeyPath= Path.Combine(Environment.CurrentDirectory, "my_secret_key_jwt.json");
-        private static readonly string myJWKeyPath= Path.Combine(Environment.CurrentDirectory,"Template", "my_secret_key_jwt.json");
+        private static readonly string myJWKeyPath= Path.
+            Combine(Environment.CurrentDirectory,"Template", "my_secret_key_jwt.json");
         // Gera uma sequencia de Numeros Aleatorios
-        private static RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
+        private static RandomNumberGenerator randomNumberGenerator =
+            RandomNumberGenerator.Create();
 
         private SecurityKey securityKey;
 
 
-        public JsonWebKeyApp()
+        public KeyJWT()
         {
-            this.SecurityKey = loadKey();
+            this.securityKey = loadKey();
         }
 
 
@@ -31,7 +32,9 @@ namespace MakeupApi.Models
             if (File.Exists(myJWKeyPath))
             {
                 // Recupera/Desserializa e Retorna os Valores da Key do JSON Armazenada
-                var storedJsonWebKey = JsonConvert.DeserializeObject<Microsoft.IdentityModel.Tokens.JsonWebKey>(File.ReadAllText(myJWKeyPath));
+                var storedJsonWebKey = JsonConvert.
+                    DeserializeObject<Microsoft.IdentityModel.Tokens.JsonWebKey>
+                    (File.ReadAllText(myJWKeyPath));
                 return storedJsonWebKey;
             }
             else
@@ -68,6 +71,5 @@ namespace MakeupApi.Models
 
         // Obtem e Define o Valor da Chave
         public SecurityKey SecurityKey { get => securityKey; set => securityKey = value; }
-
     }
 }
