@@ -22,5 +22,16 @@ namespace MakeupApi.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("server=localhost;user id=admin;password=admin;persistsecurityinfo=False;database=" +
+            "makeup_api")]
+        public string connection {
+            get {
+                return ((string)(this["connection"]));
+            }
+        }
     }
 }
