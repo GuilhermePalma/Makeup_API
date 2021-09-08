@@ -1,8 +1,8 @@
+using MakeupApi.Areas.HelpPage.ModelDescriptions;
+using MakeupApi.Areas.HelpPage.Models;
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using MakeupApi.Areas.HelpPage.ModelDescriptions;
-using MakeupApi.Areas.HelpPage.Models;
 
 namespace MakeupApi.Areas.HelpPage.Controllers
 {

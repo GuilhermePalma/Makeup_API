@@ -1,108 +1,208 @@
 ﻿using MakeupApi.Models;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using MakeupApi.Models.DAO;
+using MakeupApi.Models.Token;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Web.Http;
-using System.Web.Http.Results;
 
 namespace MakeupApi.Controllers
 {
     public class UserController : ApiController
     {
 
-        List<User> users = new List<User>(new User[] {
-            new User(1, "Guilherme", "Colifeu", "gui_colifeu", "loginGui", "senhaGui"),
-            new User(2, "Gabriel", "Ramos", "gabriel_ramos", "loginGabriel", "senhaGabriel"),
-            new User(3, "Isabela", "Santos", "isabela_santos", "loginIsa", "senhaIsa")
-        });
-
-        List<User> userLogin = new List<User>()
-        {
-            new User("login1", "senha123"),
-            new User("login2", "senha456"),
-            new User("login3", "senha789")
-        };
-
-        // GET: api/User
-        [ActionName("GetAllUsers")]
-        public HttpResponseMessage Get()
-        {
-            return Request.CreateResponse(HttpStatusCode.Found, users);
-        }
-
-        // GET: api/User/{id}
-        [HttpGet]
-        [ActionName("GetUserById")]
-        public HttpResponseMessage Get(int id)
-        {
-            var userId = users.FirstOrDefault((user) => user.Id == id);
-
-            if (userId == null)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound,string.Format("Usuario do ID = {0} não Encontrado", id));
-            }
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.Found, userId);
-            }   
-        }
-
-        // POST: api/User
+        // POST: api/user/GenerateTokenLogin
+        // Se o Usuario Existir no Banco de Dados ---> Gera o Token
         [HttpPost]
-        [ActionName("InsertUser")]
-        public HttpResponseMessage Post([FromBody]List<User> value)
+        [ActionName("GenerationToken")]
+        public HttpResponseMessage GenerationTokenUser([FromBody] User user)
         {
-        /*    User user = new User()
-            {
-                Name = value.Name,
-                Last_name = value.Last_name,
-                Nickname = value.Nickname,
-                Login = value.Login,
-                Password = value.Password
-            };*/
+            if (user == null) return Request.CreateErrorResponse(
+                     HttpStatusCode.NotFound, "Parametros POST Invalido");
 
-            /*if (value == null || !value.avalaibleUser())
+            UserDAO userDAO = new UserDAO();
+
+            // Obtem o Id do Usuario Informado (Atraves do E-mail e Senha)
+            user.Id = userDAO.ReturnIdUser(user.Email, user.Password);
+
+            User userDatabase = new User();
+            userDatabase = userDAO.SelectUser(user.Id);
+
+            if (userDatabase == null)
             {
-                // Dados Vazios ou Nulos
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Dados Invalidos: Sem Parametros e/ou Querry Vazia");
+                return Request.CreateErrorResponse(
+                    HttpStatusCode.NotFound, userDAO.Error_operation);
             }
             else
             {
-                
-                // Adiciona o Elemento no Final da Lista
-                users.Add(new User(value.Id, value.Name, value.Last_name, value.Nickname, value.Login, value.Password));
-                var response = Request.CreateResponse(HttpStatusCode.Created, value);
-                string uri = Url.Link("DefaultApi", new { id = value.Id });
-                response.Headers.Location = new Uri(uri);
-                return response;
-            }*/
-
-            if (value == null)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Dados Invalidos: Sem Parametros e/ou Querry Vazia");
+                return Request.CreateResponse(HttpStatusCode.OK,
+                    new HandlerJWT().GenerateToken(userDatabase.Nickname, userDatabase.Id));
             }
-            else
-            {
-                users.AddRange(value);
-                return Request.CreateResponse(HttpStatusCode.Created, users);
-            }
-
-            
-
         }
 
-        // PUT: api/User/5
-        public void Put(int id, [FromBody]string value)
+        // POST: api/user/Login
+        // A partir de um Email + Senha + Token e Valida o Usuario. Retorna um Booleano
+        [HttpPost]
+        [AuthenticationJWT]
+        [ActionName("Login")]
+        public HttpResponseMessage ValidateLogin([FromBody] User user)
         {
+            if (user == null) return Request.CreateErrorResponse(
+                        HttpStatusCode.NotFound, "Parametros POST Invalido");
+
+            UserDAO userDAO = new UserDAO();
+
+            // Obtem o Id do Usuario Informado (Atraves do E-mail e Senha)
+            bool exist_user = userDAO.ExistsUser(user.Email, user.Password);
+
+            if (!exist_user)
+            {
+                return Request.CreateErrorResponse(
+                    HttpStatusCode.NotFound, userDAO.Error_operation);
+            }
+            else return Request.CreateResponse(HttpStatusCode.OK, true);
         }
 
-        // DELETE: api/User/5
-        public void Delete(int id)
+        // GET: api/user/Information/{id}
+        // Obtem informações do Usuario atraves do Email e Senha
+        [HttpGet]
+        [ActionName("Information")]
+        [AuthenticationJWT]
+        public HttpResponseMessage GetInformation(int id)
         {
+            UserDAO userDAO = new UserDAO();
+
+            User userDatabase = new User();
+            userDatabase = userDAO.SelectUser(id);
+
+            // Obtem o Id do Usuario Informado (Atraves do E-mail e Senha)
+            if (userDatabase == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound,
+                    "ID do Usuario não Encontado");
+            }
+            else return Request.CreateResponse(HttpStatusCode.OK, userDatabase);
+        }
+
+        // POST: api/user/Register
+        // Cadastra o Usuario (Caso não Exista)
+        [HttpPost]
+        [ActionName("Register")]
+        public HttpResponseMessage Insert([FromBody] User user)
+        {
+            if (user == null) return Request.CreateErrorResponse(
+                        HttpStatusCode.NotFound, "Parametros POST Invalido");
+
+            UserDAO userDAO = new UserDAO();
+
+            if (!userDAO.InsertUser(user))
+            {
+                return Request.CreateErrorResponse(
+                    HttpStatusCode.NotFound, userDAO.Error_operation);
+            }
+
+            // Obtem o Codigo do Usuario
+            user.Id = userDAO.ReturnIdUser(user.Email, user.Password);
+
+            // Gera um Token (JWT) caso o Codigo seja valido
+            if (user.Id <= 0)
+            {
+                return Request.CreateErrorResponse(
+                    HttpStatusCode.NotFound, userDAO.Error_operation);
+            }
+            else return Request.CreateResponse(HttpStatusCode.OK,
+              new HandlerJWT().GenerateToken(user.Nickname, user.Id));
+        }
+
+        // PUT: api/user/Update/
+        // Atualiza Todos os Dados do usuario (Necessario Email, Senha e ID)
+        [HttpPut]
+        [AuthenticationJWT]
+        [ActionName("Update")]
+        public HttpResponseMessage Update([FromBody] User user)
+        {
+            if (user == null) return Request.CreateErrorResponse(
+                     HttpStatusCode.NotFound, "Parametros PUT Invalido");
+
+            UserDAO userDAO = new UserDAO();
+            bool isUpdated = userDAO.UpdateUser(user);
+            if (!isUpdated)
+            {
+                return Request.CreateErrorResponse(
+                    HttpStatusCode.NotFound, userDAO.Error_operation);
+            }
+            else return Request.CreateResponse(HttpStatusCode.OK, isUpdated);
+        }
+
+        // PUT: api/user/UpdateNickname
+        // Atualiza apenas o Nickname/Nome de Usuario (Necessario Email, Senha, ID e Nickname)
+        [HttpPut]
+        [AuthenticationJWT]
+        [ActionName("UpdateNickname")]
+        public HttpResponseMessage UpdateNickname([FromBody] User user)
+        {
+            if (user == null) return Request.CreateErrorResponse(
+                     HttpStatusCode.NotFound, "Parametros PUT Invalido");
+
+            UserDAO userDAO = new UserDAO();
+
+            if (!userDAO.UpdateNickname(user))
+            {
+                return Request.CreateErrorResponse(
+                    HttpStatusCode.NotFound, userDAO.Error_operation);
+            }
+
+            // Obtem o Usuario atualizado para Gerar um novo Token (JWT)
+            User userUpdate = new User();
+            userUpdate = userDAO.SelectUser(user.Id);
+
+            if (userUpdate == null)
+            {
+                return Request.CreateErrorResponse(
+                    HttpStatusCode.NotFound, userDAO.Error_operation);
+            }
+            else return Request.CreateResponse(HttpStatusCode.OK,
+                    new HandlerJWT().GenerateToken(userUpdate.Nickname, userUpdate.Id));
+        }
+
+        // PUT: api/user/UpdateEmail
+        // Atualiza somente o Email (Necessario Email, Senha, ID e Email)
+        [HttpPut]
+        [AuthenticationJWT]
+        [ActionName("UpdateEmail")]
+        public HttpResponseMessage UpdateEmail([FromBody] User user)
+        {
+            if (user == null) return Request.CreateErrorResponse(
+                     HttpStatusCode.NotFound, "Parametros PUT Invalido");
+
+            UserDAO userDAO = new UserDAO();
+
+            if (!userDAO.UpdateEmail(user))
+            {
+                return Request.CreateErrorResponse(
+                    HttpStatusCode.NotFound, userDAO.Error_operation);
+            }
+            else return Request.CreateResponse(HttpStatusCode.OK, true);
+        }
+
+        // DELETE: api/User/Delete
+        // Exclui o Usuario do Banco de Dados (Necessario Email, Senha e ID)
+        [HttpDelete]
+        [AuthenticationJWT]
+        [ActionName("Delete")]
+        public HttpResponseMessage Delete([FromBody] User user)
+        {
+            if (user == null) return Request.CreateErrorResponse(
+                     HttpStatusCode.NotFound, "Parametros DELETE Invalido");
+
+            UserDAO userDAO = new UserDAO();
+            bool is_deletedUser = userDAO.DeleteUser(user);
+
+            if (!is_deletedUser)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound,
+                    userDAO.Error_operation);
+            }
+            else return Request.CreateResponse(HttpStatusCode.OK, is_deletedUser);
         }
     }
 }

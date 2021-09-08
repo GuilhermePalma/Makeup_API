@@ -1,5 +1,4 @@
-﻿using MakeupApi;
-using MakeupApi.Controllers;
+﻿using MakeupApi.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Web.Mvc;
 
