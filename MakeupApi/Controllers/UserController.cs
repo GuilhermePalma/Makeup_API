@@ -1,4 +1,5 @@
 ﻿using MakeupApi.Models;
+using MakeupApi.Models.Token;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,6 +25,24 @@ namespace MakeupApi.Controllers
             new User("Gabriel", "Ramos", "gabriel_ramos", "loginGabriel", "senhaGabriel"),
             new User("Isabela", "Santos", "isabela_santos", "loginIsa", "senhaIsa")
         });
+
+        [HttpGet]
+        [ActionName("JsonWebToken")]
+        public HttpResponseMessage Teste(string name, int id)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, 
+                new HandlerJWT().generateToken(name,id));
+
+        }
+
+        // TODO: Retirar
+        [HttpGet]
+        [ActionName("usandoToken")]
+        [AuthenticationJWT]
+        public HttpResponseMessage ReturnTeste()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, users);
+        }
 
         // GET: api/User/users ---> Lista todos os Usuarios
         [ActionName("list_user")]
