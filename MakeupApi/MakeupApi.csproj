@@ -226,7 +226,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-<<<<<<< HEAD
     <Compile Include="Models\ADO\DataBaseHandler.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\DAO\BrandDAO.cs" />
