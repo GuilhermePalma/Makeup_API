@@ -226,6 +226,20 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+<<<<<<< HEAD
+    <Compile Include="Models\ADO\DataBaseHandler.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\DAO\BrandDAO.cs" />
+    <Compile Include="Models\DAO\CountryDAO.cs" />
+    <Compile Include="Models\DAO\FavoriteDAO.cs" />
+    <Compile Include="Models\DAO\LocationDAO.cs" />
+    <Compile Include="Models\DAO\MakeupDAO.cs" />
+    <Compile Include="Models\DAO\StateCityDAO.cs" />
+    <Compile Include="Models\DAO\TypeDAO.cs" />
+    <Compile Include="Models\DAO\UserDAO.cs" />
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\Makeup.cs" />
+    <Compile Include="Models\StateCity.cs" />
     <Compile Include="Models\Token\ConfigurationsToken.cs" />
     <Compile Include="Models\Token\HandlerJWT.cs" />
     <Compile Include="Models\Token\KeyJWT.cs" />
