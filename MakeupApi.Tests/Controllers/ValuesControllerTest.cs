@@ -1,12 +1,7 @@
-﻿using MakeupApi;
-using MakeupApi.Controllers;
+﻿using MakeupApi.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Web.Http;
 
 namespace MakeupApi.Tests.Controllers
 {

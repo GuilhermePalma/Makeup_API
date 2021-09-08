@@ -34,7 +34,7 @@ namespace MakeupApi.Models.ADO
                     Has_connectionAvailable = true;
                 }
             }
-            catch(NullReferenceException ex)
+            catch (NullReferenceException ex)
             {
                 Has_connectionAvailable = false;
                 Error_operation = "Não foi possivel Obter a " +
@@ -79,11 +79,12 @@ namespace MakeupApi.Models.ADO
                 // Executa a query no Banco e Obtem o n° de afetados
                 row_affected = commandSql.ExecuteNonQuery();
             }
-            catch
+            catch (Exception ex)
             {
                 // Erro na Execução
                 Error_operation = "Houve um Erro na Execução da Solicitação";
-                System.Diagnostics.Debug.WriteLine("Não foi Possivel Executar o Comando");
+                System.Diagnostics.Debug.WriteLine("Não foi Possivel Executar o Comando." +
+                    "Exceção: " + ex);
                 return ERROR;
             }
 
@@ -97,14 +98,20 @@ namespace MakeupApi.Models.ADO
             {
                 Error_operation = "Dados Solicitados não Encontrados";
                 return NOT_FOUND;
-            } else return row_affected;
+            }
+            else return row_affected;
         }
 
         // Realiza a Letirua de Dados do Banco de Dados
         public MySqlDataReader readerTable(string query)
         {
             // Verifica o comando recebido e Monta um Comando SQL
-            if (string.IsNullOrEmpty(query)) return null;
+            if (string.IsNullOrEmpty(query))
+            {
+                Error_operation = "Solicitação Invalida/Vazia";
+                return null;
+            }
+
             MySqlCommand commandSql = new MySqlCommand
             {
                 CommandText = query,
@@ -112,7 +119,11 @@ namespace MakeupApi.Models.ADO
                 Connection = mysqlConnection
             };
 
-            if (commandSql == null) return null;
+            if (commandSql == null)
+            {
+                Error_operation = "Erro ao Criar a Solicitação para o Banco de Dados";
+                return null;
+            }
 
             try
             {

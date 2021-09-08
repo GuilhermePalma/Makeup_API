@@ -1,19 +1,16 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Web;
 
 namespace MakeupApi.Models.Token
 {
     public class KeyJWT
     {
         // Local do arquivo com a Chave Gerada e Salva
-        private static readonly string myJWKeyPath= Path.
-            Combine(Environment.CurrentDirectory,"Template", "my_secret_key_jwt.json");
+        private static readonly string myJWKeyPath = Path.
+            Combine(Environment.CurrentDirectory, "Template", "my_secret_key_jwt.json");
         // Gera uma sequencia de Numeros Aleatorios
         private static RandomNumberGenerator randomNumberGenerator =
             RandomNumberGenerator.Create();
@@ -43,7 +40,7 @@ namespace MakeupApi.Models.Token
                 File.WriteAllText(myJWKeyPath, JsonConvert.SerializeObject(newKey));
                 return newKey;
             }
-            
+
         }
 
 

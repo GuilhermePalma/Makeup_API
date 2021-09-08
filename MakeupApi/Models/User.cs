@@ -3,10 +3,10 @@
     public class User
     {
         public static string OK = "Campo Validado";
-        public static string INPUT_NULL = "Campo Obrigatorio.";
-        public static string INPUT_MIN_LENGTH = "%1$s deve ter no Minimo %2$s Caracteres";
-        public static string INPUT_MAX_LENGTH = "%1$s deve ter no Maximo %2$s Caracteres";
-        public static string INPUT_NOT_FORMAT = "%1$s deve ter conter apenas %2$s";
+        public static string INPUT_NULL = "Campo {0} Obrigatorio.";
+        public static string INPUT_MIN_LENGTH = "{0} deve ter no Minimo {1} Caracteres";
+        public static string INPUT_MAX_LENGTH = "{0} deve ter no Maximo {1} Caracteres";
+        public static string INPUT_NOT_FORMAT = "{0} deve ter conter apenas {1}";
 
         private int id;
         private string name;
@@ -62,7 +62,7 @@
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
-                return INPUT_NULL;
+                return string.Format(INPUT_NULL, "Nome (Name)");
             }
             else if (name.Length < 3)
             {
@@ -72,17 +72,18 @@
             {
                 return string.Format(INPUT_MAX_LENGTH, "Nome", 120);
             }
-            else if (!name.Contains("^[A-ZÀ-úà-úa-zçÇ\\s]*"))
+            else if (name.Contains("^[A-ZÀ-úà-úa-zçÇ\\s]*"))
             {
                 return string.Format(INPUT_NOT_FORMAT, "Nome", "Letras");
             }
             else return OK;
         }
 
-        public static string ValidationNickname(string nickname) {
+        public static string ValidationNickname(string nickname)
+        {
             if (string.IsNullOrEmpty(nickname) || string.IsNullOrWhiteSpace(nickname))
             {
-                return INPUT_NULL;
+                return string.Format(INPUT_NULL, "Nome de Usuario (Nickname)");
             }
             else if (nickname.Length < 3)
             {
@@ -92,9 +93,9 @@
             {
                 return string.Format(INPUT_MAX_LENGTH, "Nome de Usuario", 40);
             }
-            else if (!nickname.Contains("^[A-Za-z._\\s]*"))
+            else if (nickname.Contains("^[A-Za-z._\\s]*"))
             {
-                return string.Format(INPUT_NOT_FORMAT, "Nome de Usuario", 
+                return string.Format(INPUT_NOT_FORMAT, "Nome de Usuario",
                     "Letras, Pontos ou Hifen (Sem Espaço em Branco)");
             }
             else return OK;
@@ -104,7 +105,7 @@
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrWhiteSpace(email))
             {
-                return INPUT_NULL;
+                return string.Format(INPUT_NULL, "Email");
             }
             else if (email.Length < 8)
             {
@@ -114,7 +115,7 @@
             {
                 return string.Format(INPUT_MAX_LENGTH, "Email", 150);
             }
-            else if (!email.Contains("^[A-Za-z\\S\\d._\\-@#]*"))
+            else if (email.Contains("^[A-Za-z\\S\\d._\\-@#]*"))
             {
                 return string.Format(INPUT_NOT_FORMAT, "Email",
                     "Letras, Numeros, e alguns caracteres (Hifen, " +
@@ -127,7 +128,7 @@
         {
             if (string.IsNullOrEmpty(password) || string.IsNullOrWhiteSpace(password))
             {
-                return INPUT_NULL;
+                return string.Format(INPUT_NULL, "Senha (Password)");
             }
             else if (password.Length < 3)
             {
@@ -137,9 +138,9 @@
             {
                 return string.Format(INPUT_MAX_LENGTH, "Senha", 40);
             }
-            else if (!password.Contains("^[A-Za-z\\S\\d´`^~.,_\\-?@!*&+=#/|]*"))
+            else if (password.Contains("^[A-Za-z\\S\\d´`^~.,_\\-?@!*&+=#/|]*"))
             {
-                return string.Format(INPUT_NOT_FORMAT, "Senha", 
+                return string.Format(INPUT_NOT_FORMAT, "Senha",
                     "Letras, Numeros, Acentos e Caracteres Especiais Validos");
             }
             else return OK;
@@ -158,7 +159,7 @@
 
             return false;
         }
-        
+
         public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
         public string Nickname { get => nickname; set => nickname = value; }

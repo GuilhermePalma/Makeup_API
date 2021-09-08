@@ -1,10 +1,8 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using MakeupApi.Models.DAO;
+using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Web;
 
 namespace MakeupApi.Models.Token
 {
@@ -15,14 +13,13 @@ namespace MakeupApi.Models.Token
         private string mobileUsed = ConfigurationsToken.GetAudience();
         private SecurityKey securityKey = ConfigurationsToken.GetSecurityKey();
 
-        public string generateToken(string name, int id)
+        public string GenerateToken(string nickname, int id_user)
         {
-            
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.Name, name),
-                    new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+                    new Claim(ClaimTypes.Name, nickname),
+                    new Claim(ClaimTypes.NameIdentifier, id_user.ToString()),
                 }),
                 Issuer = locationAPI,
                 IssuedAt = DateTime.Today,
@@ -35,7 +32,7 @@ namespace MakeupApi.Models.Token
 
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             JwtSecurityToken securityToken = handler.CreateJwtSecurityToken(tokenDescriptor);
-            return handler.WriteToken(securityToken);   
+            return handler.WriteToken(securityToken);
         }
 
         public static ClaimsPrincipal GetPrincipal(string token)
@@ -44,7 +41,7 @@ namespace MakeupApi.Models.Token
             {
                 // Obtem e Lê o Token Recebido
                 JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-                JwtSecurityToken jwtTokenReciver = 
+                JwtSecurityToken jwtTokenReciver =
                     (JwtSecurityToken)tokenHandler.ReadToken(token);
 
                 if (jwtTokenReciver == null) return null;
@@ -79,7 +76,7 @@ namespace MakeupApi.Models.Token
             }
         }
 
-        public static bool validationToken(string token)
+        public static bool ValidationToken(string token)
         {
             // Obtem os valores do Token (caso seja valido)
             ClaimsPrincipal principal = GetPrincipal(token);
@@ -102,26 +99,28 @@ namespace MakeupApi.Models.Token
 
             if (usernameClaim == null || idClaim == null) return false;
 
-            string username = usernameClaim.Value;
-            int id;
+            string nickname = usernameClaim.Value;
+            int id_user;
 
             try
             {
-                id = int.Parse(idClaim.Value);
+                id_user = int.Parse(idClaim.Value);
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 // Erro no formato do String p/ Int
                 return false;
             }
 
-            // todo: adicionar validação se o usuario e id existe no bd
-            // Valida o Usuario
-            if(!string.IsNullOrEmpty(username) && id != 0)
-            {
-                return username.Equals("admin") && id == 1;
-            }
-            return false;
+            // Busca o Usuario no Banco de Dados e Obtem seus Dados
+            User userDatabase = new User();
+            userDatabase = new UserDAO().SelectUser(id_user);
+
+            // Usuario não Existe ou ID Invalido
+            if (userDatabase == null) return false;
+            if (userDatabase.Nickname != nickname) return false;
+
+            return true;
         }
 
     }

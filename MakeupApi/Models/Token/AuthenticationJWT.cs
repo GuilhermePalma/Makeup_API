@@ -23,14 +23,14 @@ namespace MakeupApi.Models.Token
             AuthenticationHeaderValue authorizationHeader = request.Headers.Authorization;
 
             // Verifica a Autorização do Header é Valida
-            if(authorizationHeader == null)
+            if (authorizationHeader == null)
             {
                 context.ErrorResult =
                      new AuthenticationFailureResult("Header não Encontrado ou Invalido", request);
                 return;
             }
 
-            if(authorizationHeader.Scheme != "Bearer")
+            if (authorizationHeader.Scheme != "Bearer")
             {
                 context.ErrorResult =
                      new AuthenticationFailureResult("Esquema de Autenticação Invalido", request);
@@ -47,7 +47,7 @@ namespace MakeupApi.Models.Token
             }
 
             // Valida se as informações do Token são Validas
-            if (!HandlerJWT.validationToken(authenticationPatameter))
+            if (!HandlerJWT.ValidationToken(authenticationPatameter))
             {
                 context.ErrorResult =
                      new AuthenticationFailureResult("Autenticação do Token Invalido", request);
@@ -89,7 +89,7 @@ namespace MakeupApi.Models.Token
         public HttpResponseMessage ReturnErrorUnauthorized()
         {
             return RequestMessageError.CreateErrorResponse(
-                System.Net.HttpStatusCode.Unauthorized, Error_operation, 
+                System.Net.HttpStatusCode.Unauthorized, Error_operation,
                 new Exception(RequestMessageError.RequestUri.ToString() +
                 " Header:" + RequestMessageError.Headers.ToString()));
         }
