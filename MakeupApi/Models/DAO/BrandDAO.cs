@@ -280,7 +280,7 @@ namespace MakeupApi.Models.DAO
         // Exclui se a Makeup é a unica usando a Marca
         public bool DeleteOnlyBrand(string brand)
         {
-            // Verificar se o Usuario é o unico usando aquele endereço 
+            // Verificar se o Usuario é o unico usando aquela marca 
             if (IsOnlyBrand(brand))
             {
                 // Obtem e Valida o ID da marca
@@ -319,61 +319,6 @@ namespace MakeupApi.Models.DAO
                 // Não Exlcui o usuario pois não é o unico usando o Registro
                 Error_Operation = string.Empty;
                 return false;
-            }
-        }
-
-        // Atualiza se a Makeup é a unica usando a Marca
-        public bool UpdateOnlyBrand(string oldBrand, string newBrand)
-        {
-            // Valida as marcas Passadas
-            if (!ValidationBrand(oldBrand) || !ValidationBrand(newBrand)) return false;
-            else if (oldBrand == newBrand) return true;
-
-            // Obtem o ID da nova Marca Infromada
-            int code_newAddress = ReturnIdBrand(newBrand);
-
-            if (code_newAddress == ERROR) return false;
-            else if (code_newAddress > 0)
-            {
-                // Registro novo já existe no Banco de Dados e vê se o Velho somente ele usava
-                DeleteOnlyBrand(oldBrand);
-                return true;
-            }
-            else if (IsOnlyBrand(oldBrand))
-            {
-                // Nova Marca não Existe no Banco de Dados e Antigo Registro é Unico ---> Atualiza
-                int id_oldType = ReturnIdBrand(oldBrand);
-                string sql = "UPDATE {0} SET {1}='{2}' WHERE {3}={4}";
-                string[] parameters_sql = new string[]
-                {
-                    TABLE_BRAND, NAME_BRAND, newBrand, ID_BRAND, id_oldType.ToString()
-                };
-
-                string command = StringFormat(sql, parameters_sql);
-                if (string.IsNullOrEmpty(command)) return false;
-
-                using (DatabaseHandler database = new DatabaseHandler())
-                {
-                    if (!database.Has_connectionAvailable)
-                    {
-                        Error_Operation = database.Error_operation;
-                        return false;
-                    }
-                    else if (database.executeCommand(command) <= 0)
-                    {
-                        // Atualização não foi bem sucedida (Nenhum registro alterado)
-                        Error_Operation = "Não Foi Possivel Atualizar a Marca. "
-                            + database.Error_operation;
-                        return false;
-                    }
-                    else return true;
-                }
-            }
-            else
-            {
-                // Novo registro não Existe no Banco de Dados e o Registro Velho
-                // é Usado por +1 Usuario ---> Insere novo Registro
-                return InsertBrand(newBrand);
             }
         }
 

@@ -282,7 +282,7 @@ namespace MakeupApi.Models.DAO
         // Exclui se a Makeup é a unica usando o Tipo 
         public bool DeleteOnlyType(string type)
         {
-            // Verificar se o Usuario é o unico usando aquele endereço 
+            // Verificar se o Usuario é o unico usando aquele tipo
             if (IsOnlyType(type))
             {
                 // Obtem e Valida o ID do Tipo passado
@@ -322,62 +322,6 @@ namespace MakeupApi.Models.DAO
                 // Não Exlcui o usuario pois não é o unico usando o Registro
                 Error_Operation = string.Empty;
                 return false;
-            }
-        }
-
-        // Atualiza se a Makeup é a unica usando o Tipo 
-        public bool UpdateOnlyType(string oldType, string newType)
-        {
-            // Valida os Tipos passados
-            if (!ValidationType(oldType) || !ValidationType(newType)) return false;
-            else if (oldType == newType) return true;
-           
-            // Verifica se o novo Tipo existe no Banco de Dados ---> Obtem o ID
-            int code_newAddress = ReturnIdType(newType);
-
-            if (code_newAddress == ERROR) return false;
-            else if (code_newAddress > 0)
-            {
-                // Registro novo já existe no Banco de Dados e vê se o Velho somente ele usava
-                DeleteOnlyType(oldType);
-                return true;
-            }
-            else if (IsOnlyType(oldType))
-            {
-                // Novo Tipo não Existe no Banco de Dados e Antigo Registro é Unico ---> Atualiza
-
-                int id_oldType = ReturnIdType(oldType);
-                string sql = "UPDATE {0} SET {1}='{2}' WHERE {3}={4}";
-                string[] parameters_sql = new string[]
-                {
-                    TABLE_TYPE, NAME_TYPE, newType, ID_TYPE, id_oldType.ToString()
-                };
-
-                string command = StringFormat(sql, parameters_sql);
-                if (string.IsNullOrEmpty(command)) return false;
-
-                using (DatabaseHandler database = new DatabaseHandler())
-                {
-                    if (!database.Has_connectionAvailable)
-                    {
-                        Error_Operation = database.Error_operation;
-                        return false;
-                    }
-                    else if (database.executeCommand(command) <= 0)
-                    {
-                        // Atualização não foi bem Sucedida. Nenhum Registro Alterado
-                        Error_Operation = "Não Foi Possivel Atualizar o Tipo. "
-                            + database.Error_operation;
-                        return false;
-                    }
-                    else return true;
-                }
-            }
-            else
-            {
-                // Novo registro não Existe no Banco de Dados e o Registro Velho
-                // é Usado por +1 Usuario ---> Insere novo Registro
-                return InsertType(newType);
             }
         }
 
