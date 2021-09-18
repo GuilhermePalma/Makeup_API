@@ -2,5 +2,6 @@
 {
     public class MakeupDAO
     {
+        public static string TABLE_MAKEUP = "makeup";
     }
 }
