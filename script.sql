@@ -82,11 +82,33 @@ ALTER TABLE `location` ADD CONSTRAINT `location_fk1` FOREIGN KEY (`id_country`) 
 ALTER TABLE `location` ADD CONSTRAINT `location_fk2` FOREIGN KEY (`location_city_state`) REFERENCES `state_city`(`id_state_city`);
 
 INSERT INTO `user` (`id_user`, `nickname`, `email`, `name`, `password`, `idiom`, `theme_is_night`) VALUES
-(3, 'teste', 'fasfas', 'fasfas', 'fasfa', 'Ingles', 0),
-(17, 'dasndkas', 'testeedasda', 'dasdas', 'fjaskfas', 'Ingles', 0),
-(18, 'dasnaddkas', 'testeedadassda', 'daadsdas', 'fjaskfdasdaas', 'Ingles', 0),
-(16, 'luis', 'luis@gmail', 'Luis', 'admin', 'Ingles', 1);
+(1, 'teste', 'fasfasdasda', 'fasasdasfas', 'fasfa', 'Ingles', 0),
+(2, 'dasndkas', 'testeedasda', 'dasdas', 'fjaskfas', 'Ingles', 0),
+(3, 'dasnaddkas', 'testeedadassda', 'daadsdas', 'fjaskfdasdaas', 'Ingles', 0),
+(4, 'luis', 'luis@gmail', 'Luis', 'admin', 'Ingles', 1);
 
+INSERT INTO type(id_type, name_type) VALUES
+(1,"Blush"),
+(2, "Pulyte"),
+(3, "Objetius"),
+(4, "Maose Uls");
+
+INSERT INTO brand(id_brand, name_brand) VALUES
+(1,"polien"),
+(2, "moliru"),
+(3, "molse");
+
+INSERT INTO makeup(id_makeup, name, id_brand, id_type) VALUES
+(1,"Lorem Ipsulin", 1,1),
+(2,"Kilap Guti", 2,2),
+(3,"Lopar Tuni", 3,3),
+(4,"Luja Noshua", 3,4);
+
+INSERT INTO favorites(id_favorite, id_user, id_makeup) VALUES
+(1,1,1),
+(2,2,2),
+(3,2,3),
+(4,3,4);
 
 use makeup_api;
 SELECT * FROM user;

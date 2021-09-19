@@ -12,7 +12,6 @@ namespace MakeupApi.Models.DAO
         public static string ID_USER = "id_user";
         public static string ID_MAKEUP = "id_makeup";
 
-        MySqlDataReader dataReader;
         public const int ERROR = -1;
         public const int NOT_FOUND = 0;
 
@@ -80,7 +79,8 @@ namespace MakeupApi.Models.DAO
                     Error_Operation = database.Error_operation;
                     return ERROR;
                 }
-                else dataReader = database.readerTable(command);
+                
+                MySqlDataReader dataReader = database.readerTable(command);
 
                 if (dataReader == null)
                 {
@@ -109,7 +109,7 @@ namespace MakeupApi.Models.DAO
                 }
                 finally
                 {
-                    CloseItens();
+                    if (dataReader != null) dataReader.Close();
                 }
             }
 
@@ -118,18 +118,11 @@ namespace MakeupApi.Models.DAO
         // Insere um Favorito Atraves de uma Makeup e Email/Senha (User)
         public bool InsertFavorite(Makeup makeup, User user)
         {
-            string validationEmail = User.ValidationEmail(user.Email);
-            string validationPassword = User.ValidationPassword(user.Password);
+            makeup.Id_makeup = ReturnIdFavorite(makeup, user);
 
-            // Valida os Campos
-            if (validationEmail != User.OK)
+            if(ReturnIdFavorite(makeup, user) > 0)
             {
-                Error_Operation = validationEmail;
-                return false;
-            }
-            else if (validationPassword != User.OK)
-            {
-                Error_Operation = validationPassword;
+                Error_Operation = "Favorito Já Cadastrado no Banco de Dados";
                 return false;
             }
 
@@ -203,7 +196,8 @@ namespace MakeupApi.Models.DAO
                     Error_Operation = database.Error_operation;
                     return null;
                 }
-                else dataReader = database.readerTable(command);
+
+                MySqlDataReader dataReader = database.readerTable(command);
 
                 if (dataReader == null)
                 {
@@ -250,7 +244,7 @@ namespace MakeupApi.Models.DAO
                 }
                 finally
                 {
-                    CloseItens();
+                    if (dataReader != null) dataReader.Close();
                 }
             }
         }
@@ -345,8 +339,8 @@ namespace MakeupApi.Models.DAO
                     Error_Operation = database.Error_operation;
                     return null;
                 }
-                else dataReader = database.readerTable(command);
-
+                
+                MySqlDataReader dataReader = database.readerTable(command);
                 if (dataReader == null)
                 {
                     Error_Operation = database.Error_operation;
@@ -382,13 +376,13 @@ namespace MakeupApi.Models.DAO
                 }
                 catch (Exception ex)
                 {
-                    Error_Operation = "Não foi possivel Excluir o Tipo.";
+                    Error_Operation = "Não foi possivel Listar os Favoritos.";
                     System.Diagnostics.Debug.WriteLine(Error_Operation + " Exceção: " + ex);
                     return null;
                 }
                 finally
                 {
-                    CloseItens();
+                    if (dataReader != null) dataReader.Close();
                 }
             }
         }
@@ -415,10 +409,5 @@ namespace MakeupApi.Models.DAO
             }
         }
 
-        // Fecha os Itens se Necessario
-        private void CloseItens()
-        {
-            if (dataReader != null) dataReader.Close();
-        }
     }
 }

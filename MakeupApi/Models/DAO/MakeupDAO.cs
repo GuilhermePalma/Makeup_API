@@ -40,12 +40,16 @@ namespace MakeupApi.Models.DAO
             makeup.Id_type = typeDAO.ReturnIdType(makeup.Type);
 
             // Valida os IDs Obtidos
-            if (makeup.Id_brand < 1)
+            if (makeup.Id_brand == NOT_FOUND || makeup.Id_type == NOT_FOUND)
             {
+                return NOT_FOUND;
+            }
+            else if(makeup.Id_type == ERROR)
+            { 
                 Error_Operation = brandDAO.Error_Operation;
                 return ERROR;
             }
-            else if (makeup.Id_type < 1)
+            else if (makeup.Id_type == ERROR)
             {
                 Error_Operation = typeDAO.Error_Operation;
                 return ERROR;
@@ -170,7 +174,7 @@ namespace MakeupApi.Models.DAO
         public Makeup SelectMakeup(int id_makeup)
         {
             // Formação e Validação do SQL
-            string sql = "SELECT {0}, {1}, {3} FROM {4} WHERE {5}={6}";
+            string sql = "SELECT {0}, {1}, {2} FROM {3} WHERE {4}={5}";
             string[] data_sql = new string[]
             {
                 NAME_MAKEUP, ID_TYPE, ID_BRAND, TABLE_MAKEUP, ID_MAKEUP,

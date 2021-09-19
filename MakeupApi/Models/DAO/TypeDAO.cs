@@ -228,7 +228,7 @@ namespace MakeupApi.Models.DAO
             string sql = "SELECT {0} FROM {1} WHERE {2}={3}";
             string[] parameters_sql = new string[]
             {
-                count_formmated, MakeupDAO.TABLE_MAKEUP, NAME_FOREIGN_ID, type
+                count_formmated, MakeupDAO.TABLE_MAKEUP, NAME_FOREIGN_ID, id_type.ToString()
             };
 
             string command = StringFormat(sql, parameters_sql);

@@ -10,3 +10,5 @@ ASP.NET Framework API - Será utilizada na obtenção e armazenamento de dados d
 [3 - Permissão de Escrita e Leitura no IIS Express](https://stackoverflow.com/a/11856540)
 
 [4 - Tutorial da Criação do JWT](https://www.youtube.com/watch?v=AUbGk5Ab40A)
+
+[5 - Utilização do JObject](http://www.macoratti.net/19/06/mvc5_webapimp1.htm)

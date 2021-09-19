@@ -218,15 +218,15 @@ namespace MakeupApi.Models.DAO
         public bool IsOnlyBrand(string brand)
         {
             // Obtem e Valida o ID
-            int id_type = ReturnIdBrand(brand);
-            if (id_type <= 0) return false;
+            int id_brand = ReturnIdBrand(brand);
+            if (id_brand <= 0) return false;
 
             // Formação e Validação do Comando SQL
             string count_formmated = StringFormat("COUNT({0})", new string[] { NAME_FOREIGN_ID });
             string sql = "SELECT {0} FROM {1} WHERE {2}={3}";
             string[] parameters_sql = new string[]
             {
-                count_formmated, MakeupDAO.TABLE_MAKEUP, NAME_FOREIGN_ID, brand
+                count_formmated, MakeupDAO.TABLE_MAKEUP, NAME_FOREIGN_ID, id_brand.ToString()
             };
 
             string command = StringFormat(sql, parameters_sql);
