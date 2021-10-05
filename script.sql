@@ -85,7 +85,8 @@ INSERT INTO `user` (`id_user`, `nickname`, `email`, `name`, `password`, `idiom`,
 (1, 'teste', 'fasfasdasda', 'fasasdasfas', 'fasfa', 'Ingles', 0),
 (2, 'dasndkas', 'testeedasda', 'dasdas', 'fjaskfas', 'Ingles', 0),
 (3, 'dasnaddkas', 'testeedadassda', 'daadsdas', 'fjaskfdasdaas', 'Ingles', 0),
-(4, 'luis', 'luis@gmail', 'Luis', 'admin', 'Ingles', 1);
+(4, 'user_test', 'emailtest@gmeil.com', 'Name Test', 'accountforteste', 'Portugues', 0),
+(5, 'luis', 'luis@gmail', 'Luis', 'admin', 'Ingles', 1);
 
 INSERT INTO type(id_type, name_type) VALUES
 (1,"Blush"),
