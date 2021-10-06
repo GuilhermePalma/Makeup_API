@@ -126,91 +126,42 @@ Obs: Os demais Branchs (ex: [develop](https://github.com/GuilhermePalma/Makeup_A
 ### Endpoints do Usuario
 
 <details>
-  <summary><samp>&#9776; POST: Geração do JWT (JSON Web Token)</samp></summary>
+  <summary><samp>&#9776; POST: Registrando um Usuario</samp></summary>
 
-  - Gera um Token (JWT) para o Usuario usar na Autenticação nas Etapas Seguintes. O Token contém:
-    - ```Name``` e ```Nickname``` do Usuario
-    - Prazo de expiração (5 Dias)
-    - Local do Repositorio do Emissor ([Makeup API](https://github.com/guilhermepalma/makeup_api)) e Receptor ([Makeup - Android](https://github.com/guilhermepalma/makeup))
-    - Criptografado cima de uma chave HMAC autogerada e armazenada no Servidor (ISS Express)
+  - Insere um Usuario no Banco de Dados e Gera um Token
 
   - Request (**POST**)
-    - URL ```localhost:porta/api/user/GenerationTokenUser```
+    - URL ```localhost:porta/api/user/Register```
     - Header
       ```
           "Content-Type": "application/json"
       ```
-    - Body
+    - Body → Instancia de um Usuario
       ```
           {
+              "Name": "Name Test",
               "Email": "emailtest@gmeil.com",
-              "Password": "accountforteste"
-          }
-      ```
-
-  <!-- todo: adicionar um token avalido -->
-  - Response 200 (application/json)
-    - Body → ```string token``` (Token Abaixo não é Valido, sendo somente um Exemplo)
-      ```
-          {
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-          }
-      ```
-  - Retornos de Erro:
-    - Response 404
-      - Body → Mensagem de Erro da API (Validação, Dados Inexistentes, Erro na Conexão, etc)
-      - Ex: Senha com 2 Caracteres
-        ```
-            {
-                "Senha deve ter no Minimo 3 Caracteres"
-            }
-        ```
-
-</details>
-
-<details>
-  <summary><samp>&#9776; POST: Login do Usuario</samp></summary>
-
-  - A partir do Email, Senha e JWT (JSON Web Token) verifica se o Usuario está cadastrado
-
-  - Request (**POST**)
-    - URL ```localhost:porta/api/user/Login```
-    - Header (Token Abaixo não é Valido, sendo somente um Exemplo)
-      - Substituir o campo ```this.token.user``` pelo Token (JWT) do Usuario
-      ```
-          "Content-Type": "application/json"
-          "Authorization": "Bearer this.token.user"
-      ```
-    - Body
-      ```
-          {
-              "Email": "emailtest@gmeil.com",
-              "Password": "accountforteste"
+              "Password": "accountforteste",
+              "Nickname": "user_test",
+              "Idioms": "Portugues",
+              "Theme_is_night": false
           }
       ```
 
   - Response 200 (application/json)
-    - Body → true (Usuario Validado)
+    - Body → Token Gerado (JWT)
       ```
-          {
-              true
-          }
+        {
+              "token.for.user"
+        }
       ```
   - Possiveis Retorno de Erro:
-    - Response 201
-      - Body → Erro em alguma etapa da Autenticação do Token (JWT)
-      - Ex: Não Incluir o "Bearer" no "Authorization"
-       ```
-        {
-            "Esquema de Autenticação Invalido"
-        }
-       ```
     - Response 404
       - Body → Mensagem de Erro da API (Validação, Dados Inexistentes, Erro na Conexão, etc)
-      - Ex: Email não preenchido
+      - Ex: Usuario com Idioma não Disponivel
        ```
         {
-            "Campo Email Obrigatorio."
+            "Idioma não Cadastrado"
         }
        ```
 
@@ -271,76 +222,311 @@ Obs: Os demais Branchs (ex: [develop](https://github.com/GuilhermePalma/Makeup_A
 </details>
 
 <details>
-  <summary><samp>&#9776; POST: Registrando um Usuario</samp></summary>
+  <summary><samp>&#9776; POST: Login do Usuario</samp></summary>
 
-  - Insere um Usuario no Banco de Dados e Gera um Token
+  - A partir do Email, Senha e JWT (JSON Web Token) verifica se o Usuario está cadastrado
 
   - Request (**POST**)
-    - URL ```localhost:porta/api/user/Register```
-    - Header
+    - URL ```localhost:porta/api/user/Login```
+    - Header (Token Abaixo não é Valido, sendo somente um Exemplo)
+      - Substituir o campo ```this.token.user``` pelo Token (JWT) do Usuario
       ```
           "Content-Type": "application/json"
+          "Authorization": "Bearer this.token.user"
       ```
-    - Body → Instancia de um Usuario
+    - Body
       ```
           {
-              "Name": "Name Test",
               "Email": "emailtest@gmeil.com",
-              "Password": "accountforteste",
-              "Nickname": "user_test",
-              "Idioms": "Portugues",
-              "Theme_is_night": false
+              "Password": "accountforteste"
           }
       ```
 
   - Response 200 (application/json)
-    - Body → Token Gerado (JWT)
+    - Body → true (Usuario Validado)
+      ```
+          {
+              true
+          }
+      ```
+  - Possiveis Retorno de Erro:
+    - Response 201
+      - Body → Erro em alguma etapa da Autenticação do Token (JWT)
+      - Ex: Não Incluir o "Bearer" no "Authorization"
+       ```
+        {
+            "Esquema de Autenticação Invalido"
+        }
+       ```
+    - Response 404
+      - Body → Mensagem de Erro da API (Validação, Dados Inexistentes, Erro na Conexão, etc)
+      - Ex: Email não preenchido
+       ```
+        {
+            "Campo Email Obrigatorio."
+        }
+       ```
+
+</details>
+
+<details>
+  <summary><samp>&#9776; POST: Geração do JWT (JSON Web Token)</samp></summary>
+
+  - Gera um Token (JWT) para o Usuario usar na Autenticação nas Etapas Seguintes. O Token contém:
+    - ```Name``` e ```Nickname``` do Usuario
+    - Prazo de expiração (5 Dias)
+    - Local do Repositorio do Emissor ([Makeup API](https://github.com/guilhermepalma/makeup_api)) e Receptor ([Makeup - Android](https://github.com/guilhermepalma/makeup))
+    - Criptografado cima de uma chave HMAC autogerada e armazenada no Servidor (ISS Express)
+
+  - Request (**POST**)
+    - URL ```localhost:porta/api/user/GenerationTokenUser```
+    - Header
+      ```
+          "Content-Type": "application/json"
+      ```
+    - Body
+      ```
+          {
+              "Email": "emailtest@gmeil.com",
+              "Password": "accountforteste"
+          }
+      ```
+
+  <!-- todo: adicionar um token avalido -->
+  - Response 200 (application/json)
+    - Body → ```string token``` (Token Abaixo não é Valido, sendo somente um Exemplo)
+      ```
+          {
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          }
+      ```
+  - Retornos de Erro:
+    - Response 404
+      - Body → Mensagem de Erro da API (Validação, Dados Inexistentes, Erro na Conexão, etc)
+      - Ex: Senha com 2 Caracteres
+        ```
+            {
+                "Senha deve ter no Minimo 3 Caracteres"
+            }
+        ```
+
+</details>
+
+<details>
+  <summary><samp>&#9776; PUT: Atualiza Registros de um Usuario</samp></summary>
+
+  - Atualiza os seguintes dados de um Usuario no Banco de Dados. 
+    - ```Nome```
+    - ```Senha```
+    - ```Idioma```
+    - ```Tema```
+
+  - Request (**PUT**)
+    - URL ```localhost:porta/api/user/Update```
+    - Header (Token Abaixo não é Valido, sendo somente um Exemplo)
+      - Substituir o campo ```this.token.user``` pelo Token (JWT) do Usuario
+      ```
+        "Content-Type": "application/json"
+        "Authorization": "Bearer this.token.user"
+      ```
+    - Body → ```Nickname```, ```ID``` e ```Email``` são Fixos, somente altera as Propriedades acima
+      ```
+          {
+              "Id": "4",
+              "Nickname": "user_test",
+              "Name": "Novo Nome Usuario",
+              "Email": "emailtest@gmeil.com",
+              "Password": "newaccountforteste",
+              "Idioms": "Ingles",
+              "Theme_is_night": true
+          }
+      ```
+
+  - Response 200 (application/json)
+    - Body → Caso seja alterado, retorna True
       ```
         {
-              "token.for.user"
+            true
         }
       ```
   - Possiveis Retorno de Erro:
-    - Response 404
-      - Body → Mensagem de Erro da API (Validação, Dados Inexistentes, Erro na Conexão, etc)
-      - Ex: Usuario com Idioma não Disponivel
+    - Response 201
+      - Body → Erro em alguma etapa da Autenticação do Token (JWT)
+      - Ex: Token (JWT) com dados Invalidos
        ```
         {
-            "Idioma não Cadastrado"
+            "Autenticação do Token Invalido"
+        }
+       ```
+    - Response 404
+      - Body → Mensagem de Erro da API (Validação, Dados Inexistentes, Erro na Conexão, etc)
+      - Ex: Erro na Conexão com o Banco de Dados
+       ```
+        {
+            "Não foi possivel iniciar a Conexão com o Banco de Dados"
         }
        ```
 
 </details>
 
 
-#### Documentação dos 7 Metodos Restantes em Desenvolvimento :zzz:
+<details>
+  <summary><samp>&#9776; PUT: Atualiza o Email do Usuario</samp></summary>
+
+  - Atualiza apenas o ```Email``` (Nome de Usuario) de um Usuario
+  > ```Email``` é um dado **Unico**, não podendo haver repetições
+
+  - Request (**PUT**)
+    - URL ```localhost:porta/api/user/UpdateEmail```
+    - Header (Token Abaixo não é Valido, sendo somente um Exemplo)
+      - Substituir o campo ```this.token.user``` pelo Token (JWT) do Usuario
+      ```
+        "Content-Type": "application/json"
+        "Authorization": "Bearer this.token.user"
+      ```
+    - Body → ```ID``` e ```Password``` são Fixos, somente altera o ```Nickname```
+      ```
+          {
+              "Id": "4",
+              "Password": "accountforteste",
+              "Email": "newemailtest@gmeil.com"
+          }
+      ```
+
+  - Response 200 (application/json)
+    - Body → Caso seja alterado, retorna um Token (JWT)
+      ```
+        {
+            "new.token.user"
+        }
+      ```
+  - Possiveis Retorno de Erro:
+    - Response 201
+      - Body → Erro em alguma etapa da Autenticação do Token (JWT)
+      - Ex: Não Utilizar o "Bearer" na Frente do Token
+       ```
+        {
+            "Esquema de Autenticação Invalido"
+        }
+       ```
+    - Response 404
+      - Body → Mensagem de Erro da API (Validação, Dados Inexistentes, Erro na Conexão, etc)
+      - Ex: Email já Cadastrado no Banco de Dados
+       ```
+        {
+            "Email já cadastrado no Banco de Dados.  Não é possivel ter Emails iguais."
+        }
+       ```
+
+</details>
+
+<details>
+  <summary><samp>&#9776; PUT: Atualiza o Nome de Usuario (Nickname)</samp></summary>
+
+  - Atualiza apenas o ```Nickname``` (Nome de Usuario) de um Usuario
+  > ```Nickname``` (Nome de Usuario) é um dado **Unico**, não podendo haver repetições
+
+  - Request (**PUT**)
+    - URL ```localhost:porta/api/user/UpdateNickname```
+    - Header (Token Abaixo não é Valido, sendo somente um Exemplo)
+      - Substituir o campo ```this.token.user``` pelo Token (JWT) do Usuario
+      ```
+        "Content-Type": "application/json"
+        "Authorization": "Bearer this.token.user"
+      ```
+    - Body → ```ID```, ```Email``` e ```Password``` são Fixos, somente altera o ```Nickname```
+      ```
+          {
+              "Id": "4",
+              "Email": "emailtest@gmeil.com",
+              "Password": "accountforteste",
+              "Nickname": "new_nickname_test"
+          }
+      ```
+
+  - Response 200 (application/json)
+    - Body → Caso seja alterado, retorna um Token (JWT)
+      ```
+        {
+            "new.token.user"
+        }
+      ```
+  - Possiveis Retorno de Erro:
+    - Response 201
+      - Body → Erro em alguma etapa da Autenticação do Token (JWT)
+      - Ex: Token (JWT) não Informado
+       ```
+        {
+            "Token não Encontrado"
+        }
+       ```
+    - Response 404
+      - Body → Mensagem de Erro da API (Validação, Dados Inexistentes, Erro na Conexão, etc)
+      - Ex: Nickname já Cadastrado no Banco de Dados
+       ```
+        {
+            "Nickname (Nome de Usuario) já existente no Banco de Dados. Nickname não podem ser iguais"
+        }
+       ```
+
+</details>
+
+<details>
+  <summary><samp>&#9776; DELETE: Exclusão de um Usuario</samp></summary>
+
+  - Exclui um Usuario do Banco de Dados a partir do ```Id```, ```Email``` e ```Password```
+
+  - Request (**DELETE**)
+    - URL ```localhost:porta/api/user/Delete```
+    - Header (Token Abaixo não é Valido, sendo somente um Exemplo)
+      - Substituir o campo ```this.token.user``` pelo Token (JWT) do Usuario
+      ```
+        "Content-Type": "application/json"
+        "Authorization": "Bearer this.token.user"
+      ```
+    - Body
+      ```
+          {
+              "Id": "4",
+              "Email": "emailtest@gmeil.com",
+              "Password": "accountforteste"
+          }
+      ```
+
+  - Response 200 (application/json)
+    - Body → Caso seja excluido, retorna ```true```
+      ```
+        {
+            true
+        }
+      ```
+  - Possiveis Retorno de Erro:
+    - Response 201
+      - Body → Erro em alguma etapa da Autenticação do Token (JWT)
+      - Ex: Não Informar o Token
+       ```
+        {
+            "Header não Encontrado ou Invalido"
+        }
+       ```
+    - Response 404
+      - Body → Mensagem de Erro da API (Validação, Dados Inexistentes, Erro na Conexão, etc)
+      - Ex: ID do Usuario Invalido
+       ```
+        {
+            "Codigo de Usuario (2147483648) Invalido"
+        }
+       ```
+
+</details>
+
+
+<!--
+### Variaveis Favoritas 
+### Endpoints Favoritas -->
+
+#### Documentação das Favoritadas em Desenvolvimento :zzz:
 <!-- Adicionar Endpoints abaixo
-
-User:
-  // PUT+ JWT: api/user/Update -- Atualiza Senha,Idioma e Tema
-  Parametros: Id, Nome, Nickname, Senha, Idioma, Tema
-  Retorno:
-      - Erro = 404 ou 201 ? (Not Found ou Unathorized)
-      - true
-
-  // PUT + JWT: api/user/UpdateNickname -- Atualiza somente o Nickname do Usuario
-  Parametros: Email, Senha, ID e Nickname
-  Retorno:
-      - Erro = 404 ou 201 ? (Not Found ou Unathorized)
-      - JWT (string)
-
-  // POST + JWT: api/user/UpdateEmail -- Atualiza somente o Email do Usuario
-  Parametros: Email, Senha e ID
-  Retorno:
-      - Erro = 404 ou 201 ? (Not Found ou Unathorized)
-      - true
-
-  // DELETE + JWT:  api/User/Delete --
-  Parametros: Email, Senha e ID
-  Retorno:
-      - Erro = 404 ou 201 ? (Not Found ou Unathorized)
-      - true
-
 
 Favoritas:
   // POST + JWT: api/favorites/newfavorite -- Adicionar Favorito
@@ -376,7 +562,7 @@ Favoritas:
 - [Git - Versionamento do Codigo](https://git-scm.com/downloads)
 - [GitHub - Hospedagem do Codigo-Fonte](https://github.com/guilhermepalma/makeup_api)
 - [Visual Studio - Ambiente de Desenvolvimento (IDE)](https://visualstudio.microsoft.com/pt-br/)
-- [Visual Studio Code (IDE)](https://code.visualstudio.com/download)- [Markdown All in One](https://github.com/yzhang-gh/vscode-markdown)
+- [Visual Studio Code (IDE)](https://code.visualstudio.com/download) - [Markdown All in One](https://github.com/yzhang-gh/vscode-markdown)
 - [Swagger Inspector - Testes na API](https://swagger.io/tools/swagger-inspector/)
 - [WakaTime - Marcador de Tempo](https://wakatime.com/projects/makeup_api)
 
@@ -384,7 +570,7 @@ Favoritas:
 ## Como Contribuir ?
 #### Sua Contribuição nesse Projeto é Bem-Vinda :blush: !!! Caso tenha novas implementações ou sugestões, sinta-se a vontade de abrir **Issues**, **Pull Requests** ou até mesmo **contate-me**
 
-Esse repositorio está disponibilizado sob a [Licensa MIT](LICENSE)-[Restrições](http://escolhaumalicenca.com.br/licencas/mit/), ou seja, um Projeto Open-Source !
+Esse repositorio está disponibilizado sob a [Licensa MIT](LICENSE) ([Saiba mais das Restrições](http://escolhaumalicenca.com.br/licencas/mit/)), ou seja, um Projeto **Open-Source** !
 
 Caso queira contribuir com o Projeto, siga os Passos Abaixo:
 - 1- Crie um **Fork** desse Repositorio
